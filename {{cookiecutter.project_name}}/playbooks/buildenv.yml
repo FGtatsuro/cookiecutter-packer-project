@@ -1,0 +1,7 @@
+---
+- hosts: all
+  roles:
+    - { role: FGtatsuro.virtualbox }
+    - { role: FGtatsuro.vagrant }
+    - { role: FGtatsuro.packer }
+    - { role: FGtatsuro.docker-toolbox }
