@@ -29,13 +29,10 @@ matrix:
 sudo: required
 
 install:
-  - sudo pip install -e "git+https://github.com/audreyr/cookiecutter.git#egg=cookiecutter"
-
-script:
-  - cookiecutter --replay --config-file tests/cookiecutterrc .
-  - cd test_project
   - sudo pip install -r requirements.txt
   - ansible-galaxy install -r role_requirements.yml
-  - ansible-playbook playbooks/buildenv.yml -i tests/inventory -l ${TARGET} -vvvv
   - bundle install
+
+script:
+  - ansible-playbook playbooks/buildenv.yml -i tests/inventory -l ${TARGET} -vvvv
   - bundle exec rake spec SPEC_TARGET=${TARGET}
