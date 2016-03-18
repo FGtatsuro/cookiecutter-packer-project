@@ -1,7 +1,7 @@
-|Build Status|
-
 cookiecutter-packer-project
 ==================================================
+
+|Build Status|
 
 Cookiecutter template for Packer project.
 
@@ -39,10 +39,10 @@ It's better to overwrite 'author' field with your Github username.
     $ cat ~/.cookiecutterrc
     default_context:
         author: "FGtatsuro"
-    
+
     $ cookiecutter gh:FGtatsuro/cookiecutter-packer-project
     ...
-    author [FGtatsuro]: 
+    author [FGtatsuro]:
     ...
 
 .. |Build Status| image:: https://travis-ci.org/FGtatsuro/cookiecutter-packer-project.svg?branch=master

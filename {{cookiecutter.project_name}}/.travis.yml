@@ -4,8 +4,9 @@ matrix:
   include:
     - os: osx
       language: generic
-      env:
-        - TARGET=localhost
+      script:
+        - ansible-playbook playbooks/buildenv.yml -i tests/inventory -l localhost -vvvv
+        - bundle exec rake spec SPEC_TARGET=localhost
     - os: linux
       dist: trusty
       language: python
@@ -16,15 +17,53 @@ matrix:
         apt:
           packages:
           - python-pip
-      before_script:
-        - docker run -it -d --name container python:2 /bin/bash
-        # Workaround: Docker connection plugin of Ansible requires that
-        # Python is installed at specified path(/usr/bin/python) in the target container
-        - docker exec container /bin/bash -c "if [ ! -e /usr/bin/python ]; then /bin/ln -s /usr/local/bin/python /usr/bin/python; fi"
+      script:
+        - >+
+          ansible-playbook playbooks/buildenv.yml -i tests/inventory -l localhost
+          --extra-vars="virtualbox_apt_repository='deb http://download.virtualbox.org/virtualbox/debian precise contrib'"
+          -vvvv
+        - bundle exec rake spec SPEC_TARGET=localhost
+        - packer build ${PACKER_TEMPLATE}
+        - docker run -it -d --name container ${IMAGE_NAME}
+        - bundle exec rake spec SPEC_TARGET=container
       after_script:
         - docker rm -f container
+      # If you want to push generated image to Docker Hub, you must set password as encrypted environment variable.
+      # Ref. https://docs.travis-ci.com/user/docker/#Pushing-a-Docker-Image-to-a-Registry
+      # Ref. https://docs.travis-ci.com/user/environment-variables/#Encrypted-Variables
+      #after_success:
+      #  - docker login -u="fgtatsuro" -e="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
+      #  - docker push ${IMAGE_NAME}
       env:
-        - TARGET=container
+        - PACKER_TEMPLATE: platforms/docker/debian.json
+        - IMAGE_NAME: fgtatsuro/infra-bridgehead:debian-jessie
+    - os: linux
+      dist: trusty
+      language: python
+      python: 2.7
+      services:
+        - docker
+      addons:
+        apt:
+          packages:
+          - python-pip
+      script:
+        - >+
+          ansible-playbook playbooks/buildenv.yml -i tests/inventory -l localhost
+          --extra-vars="virtualbox_apt_repository='deb http://download.virtualbox.org/virtualbox/debian precise contrib'"
+          -vvvv
+        - bundle exec rake spec SPEC_TARGET=localhost
+        - packer build ${PACKER_TEMPLATE}
+        - docker run -it -d --name container ${IMAGE_NAME}
+        - bundle exec rake spec SPEC_TARGET=container
+      after_script:
+        - docker rm -f container
+      #after_success:
+      #  - docker login -u="fgtatsuro" -e="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
+      #  - docker push ${IMAGE_NAME}
+      env:
+        - PACKER_TEMPLATE: platforms/docker/alpine.json
+        - IMAGE_NAME: fgtatsuro/infra-bridgehead:alpine-3.3
 
 sudo: required
 

@@ -1,0 +1,6 @@
+---
+- hosts: all
+  remote_user: root
+  tasks:
+    - name: this is test.
+      debug: msg="{{cookiecutter.project_name}} by {{ cookiecutter.author }}"
