@@ -35,8 +35,8 @@ matrix:
       #  - docker login -u="fgtatsuro" -e="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
       #  - docker push ${IMAGE_NAME}
       env:
-        - PACKER_TEMPLATE: platforms/docker/debian.json
-        - IMAGE_NAME: fgtatsuro/infra-bridgehead:debian-jessie
+        - PACKER_TEMPLATE=platforms/docker/debian.json
+        - IMAGE_NAME=fgtatsuro/infra-bridgehead:debian-jessie
     - os: linux
       dist: trusty
       language: python
@@ -62,8 +62,8 @@ matrix:
       #  - docker login -u="fgtatsuro" -e="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
       #  - docker push ${IMAGE_NAME}
       env:
-        - PACKER_TEMPLATE: platforms/docker/alpine.json
-        - IMAGE_NAME: fgtatsuro/infra-bridgehead:alpine-3.3
+        - PACKER_TEMPLATE=platforms/docker/alpine.json
+        - IMAGE_NAME=fgtatsuro/infra-bridgehead:alpine-3.3
 
 sudo: required
 
