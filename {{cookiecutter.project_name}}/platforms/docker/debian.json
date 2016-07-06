@@ -21,7 +21,7 @@
                         "inline": [
                                 "if [ -z \"`which python`\" ]; then apt-get update && apt-get install -y curl python python-dev && curl -kL https://bootstrap.pypa.io/get-pip.py | python; fi",
                                 "if [ -z \"`which gcc`\" ]; then apt-get update && apt-get install -y gcc; fi",
-                                "if [ -z \"`which ansible`\" ]; then pip install ansible; fi",
+                                "if [ -z \"`which ansible`\" ]; then apt-get install -y libffi-dev libssl-dev && pip install ansible; fi",
                                 "mkdir -p {{'{{user `ansible_staging_directory`}}'}}",
                                 "if [ ! -e /usr/bin/python -a -e /usr/local/bin/python ]; then /bin/ln -s /usr/local/bin/python /usr/bin/python; fi"
                         ]
